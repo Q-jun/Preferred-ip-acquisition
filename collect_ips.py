@@ -11,6 +11,9 @@ urls = ['https://ip.164746.xyz/ipTop10.html',
 # 正则表达式用于匹配IP地址
 ip_pattern = r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
 
+# 正则表达式用于匹配速度 (例如 23.21MB/s)
+speed_pattern = r'(\d+\.\d+|\d+)MB/s'
+
 # 检查ip.txt文件是否存在,如果存在则删除它
 if os.path.exists('ip.txt'):
     os.remove('ip.txt')
@@ -32,13 +35,19 @@ with open('ip.txt', 'w') as file:
         else:
             elements = soup.find_all('li')
         
-        # 遍历所有元素,查找IP地址
+        # 遍历所有元素,查找IP地址和速度
         for element in elements:
-            element_text = element.get_text()
-            ip_matches = re.findall(ip_pattern, element_text)
+            element_text = element.get_text()  # 获取元素文本
+            ip_matches = re.findall(ip_pattern, element_text)  # 查找IP地址
+            speed_matches = re.findall(speed_pattern, element_text)  # 查找速度
             
-            # 如果找到IP地址,则写入文件
-            for ip in ip_matches:
-                file.write(ip + '\n')
+            # 确保找到IP地址和速度
+            if ip_matches and speed_matches:
+                ip = ip_matches[0]  # 假设每行只有一个IP地址
+                speed = float(speed_matches[0].replace('MB/s', ''))  # 将速度转换为浮点数
+                
+                # 只保存速度大于0.00MB/s的IP地址
+                if speed > 0.00:
+                    file.write(ip + '\n')
 
-print('IP地址已保存到ip.txt文件中。')
+print('IP地址已保存到ip.txt文件中（仅包含速度大于0.00MB/s的IP）。')
