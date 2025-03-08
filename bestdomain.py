@@ -1,11 +1,18 @@
 import os
 import requests
 
-# 从本地文件读取 IP 列表
+# # 从本地文件读取 IP 列表
+# def get_ip_list(file_path):
+#     with open(file_path, 'r') as f:
+#         return [line.strip() for line in f if line.strip()]  # 读取文件并去除空行
 def get_ip_list(file_path):
-    with open(file_path, 'r') as f:
-        return [line.strip() for line in f if line.strip()]  # 读取文件并去除空行
-
+    if file_path.startswith("http"):  # 判断是否是 URL
+        response = requests.get(file_path)
+        response.raise_for_status()  # 确保请求成功
+        return [line.strip() for line in response.text.splitlines() if line.strip()]
+    else:
+        with open(file_path, 'r') as f:
+            return [line.strip() for line in f if line.strip()]
 # 获取 Cloudflare 域名信息
 def get_cloudflare_zone(api_token):
     headers = {
