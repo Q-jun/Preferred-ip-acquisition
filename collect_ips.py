@@ -5,7 +5,7 @@ import os
 
 # 目标URL列表
 urls = [
-    'https://ip.164746.xyz/ipTop10.html',
+    'https://ip.164746.xyz/ipTop10/',
     'https://cf.090227.xyz/'
 ]
 
