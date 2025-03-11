@@ -71,7 +71,7 @@ if __name__ == "__main__":
     # 子域名和对应的本地 IP 文件路径
     subdomain_ip_mapping = {
         #'bestcf': 'ip.txt',  # 使用第二份代码生成的 ip.txt 文件
-        'api': 'https://raw.githubusercontent.com/Q-jun/Preferred-ip-acquisition/refs/heads/main/ip.txt',     # 示例中同样使用 ip.txt，也可以指定其他文件
+        'sfourteen': 'https://raw.githubusercontent.com/Q-jun/Preferred-ip-acquisition/refs/heads/main/ip.txt',     # 示例中同样使用 ip.txt，也可以指定其他文件
         # 添加更多子域名和对应的文件路径
     }
     
