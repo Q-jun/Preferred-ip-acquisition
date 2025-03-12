@@ -6,7 +6,8 @@ import os
 # 目标URL列表
 urls = [
     'https://ip.164746.xyz/ipTop10.html',
-    'https://cf.090227.xyz/'
+    'https://cf.090227.xyz/',
+    'https://www.wetest.vip/page/cloudflare/address_v4.html'  # 新增网站
 ]
 
 # 正则表达式用于匹配IP地址
@@ -31,13 +32,12 @@ with open('ip.txt', 'w') as file:
             
             if url == 'https://ip.164746.xyz/ipTop10.html':
                 # 对于 ipTop10.html，直接提取所有IP地址
-                page_text = soup.get_text()  # 获取页面全部文本
+                page_text = soup.get_text()
                 ip_matches = re.findall(ip_pattern, page_text)
                 
-                # 写入所有找到的IP地址
                 for ip in ip_matches:
                     file.write(ip + '\n')
-                print(f"Extracted from {url}: {ip_matches}")
+                print(f"从 {url} 提取: {ip_matches}")
                 
             elif url == 'https://cf.090227.xyz/':
                 # 对于 cf.090227.xyz，查找表格行并过滤速度大于0的IP
@@ -47,18 +47,27 @@ with open('ip.txt', 'w') as file:
                     ip_matches = re.findall(ip_pattern, element_text)
                     speed_matches = re.findall(speed_pattern, element_text)
                     
-                    # 确保找到IP和速度
                     if ip_matches and speed_matches:
-                        ip = ip_matches[0]  # 假设每行只有一个IP
-                        speed = float(speed_matches[0].replace('MB/s', ''))  # 转换为浮点数
-                        
-                        # 只保存速度大于0的IP
+                        ip = ip_matches[0]
+                        speed = float(speed_matches[0].replace('MB/s', ''))
                         if speed > 0.00:
                             file.write(ip + '\n')
-                            print(f"Extracted from {url}: {ip} (speed: {speed}MB/s)")
+                            print(f"从 {url} 提取: {ip} (速度: {speed}MB/s)")
+            
+            elif url == 'https://www.wetest.vip/page/cloudflare/address_v4.html':
+                # 对于 wetest.vip，查找表格行并提取IP地址
+                elements = soup.find_all('tr')
+                for element in elements:
+                    element_text = element.get_text()
+                    ip_matches = re.findall(ip_pattern, element_text)
+                    
+                    if ip_matches:
+                        ip = ip_matches[0]  # 每行取第一个IP
+                        file.write(ip + '\n')
+                        print(f"从 {url} 提取: {ip}")
         
         except requests.exceptions.RequestException as e:
-            print(f"Failed to access {url}: {e}")
+            print(f"无法访问 {url}: {e}")
             continue
 
 print('符合条件的IP地址已保存到ip.txt文件中。')
